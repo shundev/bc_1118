@@ -8,7 +8,22 @@ from bottle import (
 )
 import json
 
+from blockchain import Blockchain
+blockchain = None
+
 nodes = set()
+
+@get("/chain")
+def chain():
+    res_data = {
+        "chain": blockchain.chain,
+        "length": len(blockchain.chain)
+    }
+
+    response.set_header(
+        "content-type", "application/json"
+    )
+    return json.dumps(res_data)
 
 @post("/nodes/register")
 def node_register():
@@ -28,5 +43,11 @@ def node_register():
     return json.dumps(res_data)
 
 
-if __name__ == "__main__":
+def main():
+    global blockchain
+    blockchain = Blockchain()
     run(port=2000, debug=True, reloader=True)
+
+
+if __name__ == "__main__":
+    main()
