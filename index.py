@@ -6,10 +6,26 @@ from bottle import (
     get,
     abort
 )
+import json
 
-@get("/")
-def index():
-    return "Hello, bottle!!"
+nodes = set()
+
+@post("/nodes/register")
+def node_register():
+    data = request.json
+    _nodes = data["nodes"]
+    for node in _nodes:
+        nodes.add(node)
+
+    res_data = {
+        "nodes": list(nodes)
+    }
+    response.set_header(
+        "content-type",
+        "application/json"
+    )
+
+    return json.dumps(res_data)
 
 
 if __name__ == "__main__":
